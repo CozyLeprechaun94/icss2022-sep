@@ -5,8 +5,6 @@ import nl.han.ica.icss.checker.Checker;
 import nl.han.ica.icss.checker.SemanticError;
 import nl.han.ica.icss.generator.Generator;
 import nl.han.ica.icss.parser.ASTListener;
-import nl.han.ica.icss.parser.ICSSLexer;
-import nl.han.ica.icss.parser.ICSSParser;
 import nl.han.ica.icss.transforms.Evaluator;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
@@ -14,6 +12,9 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+
+import nl.han.ica.icss.parser.ICSSLexer;
+import nl.han.ica.icss.parser.ICSSParser;
 
 import java.util.ArrayList;
 import java.util.BitSet;

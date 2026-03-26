@@ -9,6 +9,9 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.*;
 import org.antlr.v4.runtime.tree.*;
 
+import nl.han.ica.icss.parser.ICSSLexer;
+import nl.han.ica.icss.parser.ICSSParser;
+
 import java.io.*;
 
 class ParserTest {

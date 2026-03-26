@@ -41,9 +41,24 @@ MIN: '-';
 MUL: '*';
 ASSIGNMENT_OPERATOR: ':=';
 
+// Selectors
 
+selector: ID_IDENT
+    | CLASS_IDENT
+    | LOWER_IDENT
+    ;
 
+// Properties
+propertyName: LOWER_IDENT;
+
+// Expression
+expression: COLOR
+    |PIXELSIZE
+    ;
+
+// Declaration
+declaration: propertyName COLON expression SEMICOLON;
 
 //--- PARSER: ---
-stylesheet: EOF;
-
+stylesheet: stylerule*;
+stylerule: selector OPEN_BRACE declaration* CLOSE_BRACE;
