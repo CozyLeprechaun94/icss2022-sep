@@ -4,6 +4,9 @@ import nl.han.ica.datastructures.HANStack;
 import nl.han.ica.datastructures.IHANStack;
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.literals.*;
+import nl.han.ica.icss.ast.operations.AddOperation;
+import nl.han.ica.icss.ast.operations.MultiplyOperation;
+import nl.han.ica.icss.ast.operations.SubtractOperation;
 import nl.han.ica.icss.ast.selectors.ClassSelector;
 import nl.han.ica.icss.ast.selectors.IdSelector;
 import nl.han.ica.icss.ast.selectors.TagSelector;
@@ -54,11 +57,6 @@ public class ASTListener extends ICSSBaseListener {
 		currentContainer.peek().addChild(new VariableReference(ctx.getText()));
 	}
 
-//	@Override
-//	public void exitVariableReference(ICSSParser.VariableReferenceContext ctx) {
-//		currentContainer.pop();
-//	}
-
 	@Override
 	public void enterStylerule(ICSSParser.StyleruleContext ctx) {
 		Stylerule stylerule = new Stylerule();
@@ -85,16 +83,32 @@ public class ASTListener extends ICSSBaseListener {
 	}
 
 	@Override
+	public void enterExpression(ICSSParser.ExpressionContext ctx) {
+		Expression expression;
+		if (ctx.PLUS().getText() != null) {
+			expression = new AddOperation();
+		} else if (ctx.MIN().getText() != null) {
+			expression = new SubtractOperation();
+		} else if (ctx.MUL().getText() != null) {
+			expression = new MultiplyOperation();
+		} else {
+			throw new RuntimeException("Unrecognized expression operator: " + ctx.getText());
+		}
+		currentContainer.peek().addChild(expression);
+		currentContainer.push(expression);
+	}
+
+	@Override
+	public void exitExpression(ICSSParser.ExpressionContext ctx) {
+		currentContainer.pop();
+	}
+
+	@Override
 	public void enterDeclaration(ICSSParser.DeclarationContext ctx) {
 		Declaration declaration = new Declaration();
 		declaration.property = new PropertyName(ctx.propertyName().getText());
 		currentContainer.peek().addChild(declaration);
 		currentContainer.push(declaration);
-	}
-
-	@Override
-	public void exitDeclaration(ICSSParser.DeclarationContext ctx) {
-		currentContainer.pop();
 	}
 
 	@Override

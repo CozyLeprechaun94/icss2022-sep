@@ -52,7 +52,11 @@ selector: ID_IDENT
 propertyName: LOWER_IDENT;
 
 // Expression
-expression: literal | variableReference;
+expression: expression op=MUL expression
+| expression op=PLUS expression
+| expression op=MIN expression
+| literal
+| variableReference;
 
 // Declaration
 declaration: propertyName COLON expression SEMICOLON;
@@ -70,7 +74,3 @@ literal: COLOR
  |FALSE
  |PERCENTAGE
  |SCALAR;
-
-// Operations
-operation: expression op=MUL expression
-| expression op=(PLUS| MIN) expression;
