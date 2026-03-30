@@ -59,7 +59,7 @@ declaration: propertyName COLON expression SEMICOLON;
 
 //--- PARSER: ---
 stylesheet: (variableAssignment | stylerule)* EOF;
-variableAssignment: CAPITAL_IDENT ASSIGNMENT_OPERATOR expression SEMICOLON;
+variableAssignment: variableReference ASSIGNMENT_OPERATOR expression SEMICOLON;
 variableReference: CAPITAL_IDENT ;
 stylerule: selector OPEN_BRACE declaration* CLOSE_BRACE;
 
@@ -70,3 +70,7 @@ literal: COLOR
  |FALSE
  |PERCENTAGE
  |SCALAR;
+
+// Operations
+operation: expression op=MUL expression
+| expression op=(PLUS| MIN) expression;

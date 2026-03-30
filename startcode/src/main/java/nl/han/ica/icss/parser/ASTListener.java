@@ -51,10 +51,7 @@ public class ASTListener extends ICSSBaseListener {
 
 	@Override
 	public void enterVariableReference(ICSSParser.VariableReferenceContext ctx) {
-		var reference = new VariableReference(ctx.getText());
-		currentContainer.peek().addChild(reference);
-		currentContainer.push(reference);
-
+		currentContainer.peek().addChild(new VariableReference(ctx.getText()));
 	}
 
 //	@Override
