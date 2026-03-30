@@ -85,11 +85,11 @@ public class ASTListener extends ICSSBaseListener {
 	@Override
 	public void enterExpression(ICSSParser.ExpressionContext ctx) {
 		Expression expression;
-		if (ctx.PLUS().getText() != null) {
+		if (ctx.op.getType() == ICSSParser.PLUS) {
 			expression = new AddOperation();
-		} else if (ctx.MIN().getText() != null) {
+		} else if (ctx.op.getType() == ICSSParser.MIN) {
 			expression = new SubtractOperation();
-		} else if (ctx.MUL().getText() != null) {
+		} else if (ctx.op.getType() == ICSSParser.MUL) {
 			expression = new MultiplyOperation();
 		} else {
 			throw new RuntimeException("Unrecognized expression operator: " + ctx.getText());
