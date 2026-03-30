@@ -100,12 +100,24 @@ public class ASTListener extends ICSSBaseListener {
         }
     }
 
+
     @Override
     public void enterDeclaration(ICSSParser.DeclarationContext ctx) {
         Declaration declaration = new Declaration();
         declaration.property = new PropertyName(ctx.propertyName().getText());
         currentContainer.peek().addChild(declaration);
         currentContainer.push(declaration);
+    }
+
+    @Override
+    public void exitExpression(ICSSParser.ExpressionContext ctx) {
+        if (ctx.op == null) return;
+        currentContainer.pop();
+    }
+
+    @Override
+    public void exitDeclaration(ICSSParser.DeclarationContext ctx) {
+        currentContainer.pop();
     }
 
     @Override
