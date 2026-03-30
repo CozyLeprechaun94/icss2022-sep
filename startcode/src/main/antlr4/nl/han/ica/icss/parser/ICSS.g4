@@ -65,7 +65,7 @@ declaration: propertyName COLON expression SEMICOLON;
 stylesheet: (variableAssignment | stylerule)* EOF;
 variableAssignment: variableReference ASSIGNMENT_OPERATOR expression SEMICOLON;
 variableReference: CAPITAL_IDENT ;
-stylerule: selector OPEN_BRACE declaration* CLOSE_BRACE;
+stylerule: selector OPEN_BRACE (ifClause | declaration)* CLOSE_BRACE;
 
 // Literals
 literal: COLOR
@@ -74,3 +74,7 @@ literal: COLOR
  |FALSE
  |PERCENTAGE
  |SCALAR;
+
+ifClause: IF BOX_BRACKET_OPEN variableReference BOX_BRACKET_CLOSE OPEN_BRACE (declaration | ifClause)* CLOSE_BRACE elseClause?;
+
+elseClause: ELSE OPEN_BRACE (declaration | ifClause)* CLOSE_BRACE;
