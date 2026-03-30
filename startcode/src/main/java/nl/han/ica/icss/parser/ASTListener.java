@@ -3,8 +3,7 @@ package nl.han.ica.icss.parser;
 import nl.han.ica.datastructures.HANStack;
 import nl.han.ica.datastructures.IHANStack;
 import nl.han.ica.icss.ast.*;
-import nl.han.ica.icss.ast.literals.ColorLiteral;
-import nl.han.ica.icss.ast.literals.PixelLiteral;
+import nl.han.ica.icss.ast.literals.*;
 import nl.han.ica.icss.ast.selectors.ClassSelector;
 import nl.han.ica.icss.ast.selectors.IdSelector;
 import nl.han.ica.icss.ast.selectors.TagSelector;
@@ -38,30 +37,42 @@ public class ASTListener extends ICSSBaseListener {
 		return ast;
 	}
 
-//	@Override
-//	public void enterStylesheet(gen.ICSSParser.StylesheetContext ctx) {
-//		currentContainer.push(new Stylesheet());
-//		ast.setRoot(new Stylesheet());
-//	}
+	@Override
+	public void enterVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
+		VariableAssignment varAssignment = new VariableAssignment();
+		currentContainer.peek().addChild(varAssignment);
+		currentContainer.push(varAssignment);
+	}
+
+	@Override
+	public void exitVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
+		currentContainer.pop();
+	}
+
+	@Override
+	public void enterVariableReference(ICSSParser.VariableReferenceContext ctx) {
+		currentContainer.peek().addChild(new VariableReference(ctx.getText()));
+	}
 
 //	@Override
-//	public void exitStylesheet(gen.ICSSParser.StylesheetContext ctx) {
+//	public void exitVariableReference(ICSSParser.VariableReferenceContext ctx) {
 //		currentContainer.pop();
 //	}
 
 	@Override
 	public void enterStylerule(ICSSParser.StyleruleContext ctx) {
-		currentContainer.push(new Stylerule());
+		Stylerule stylerule = new Stylerule();
+		currentContainer.peek().addChild(stylerule);
+		currentContainer.push(stylerule);
 	}
 
 	@Override
 	public void exitStylerule(ICSSParser.StyleruleContext ctx) {
-		Stylerule stylerule = (Stylerule) currentContainer.pop();
-		currentContainer.peek().addChild(stylerule);
+		currentContainer.pop();
 	}
 
 	@Override
-	public void exitSelector(ICSSParser.SelectorContext ctx) {
+	public void enterSelector(ICSSParser.SelectorContext ctx) {
 		Selector selector;
 		if (ctx.CLASS_IDENT() != null) {
 			selector = new ClassSelector(ctx.CLASS_IDENT().getText());
@@ -75,33 +86,34 @@ public class ASTListener extends ICSSBaseListener {
 
 	@Override
 	public void enterDeclaration(ICSSParser.DeclarationContext ctx) {
-		currentContainer.push(new Declaration());
-	}
-
-	@Override
-	public void exitDeclaration(ICSSParser.DeclarationContext ctx) {
-		Declaration declaration = (Declaration) currentContainer.pop();
+		Declaration declaration = new  Declaration();
+		currentContainer.push(declaration);
 		currentContainer.peek().addChild(declaration);
 	}
 
 	@Override
-	public void exitPropertyName(ICSSParser.PropertyNameContext ctx) {
-		currentContainer.peek().addChild(new PropertyName(ctx.getText()));
+	public void exitDeclaration(ICSSParser.DeclarationContext ctx) {
+		currentContainer.pop();
 	}
 
 	@Override
-	public void exitExpression(ICSSParser.ExpressionContext ctx) {
-		Expression expr;
+	public void enterLiteral(ICSSParser.LiteralContext ctx) {
+		Literal literal;
 		if (ctx.COLOR() != null) {
-			expr = new ColorLiteral(ctx.COLOR().getText());
+			literal = new ColorLiteral(ctx.getText());
+		} else if (ctx.PIXELSIZE() != null) {
+			literal = new PixelLiteral(Integer.parseInt(ctx.getText().replace("px", "")));
+		} else if (ctx.TRUE() != null) {
+			literal = new BoolLiteral(ctx.getText());
+		} else if (ctx.FALSE() != null) {
+			literal = new BoolLiteral(ctx.getText());
+		} else if (ctx.SCALAR() != null) {
+			literal = new ScalarLiteral(Integer.parseInt(ctx.getText()));
+		} else if (ctx.PERCENTAGE() != null) {
+			literal = new PercentageLiteral(Integer.parseInt(ctx.getText().replace("%", "")));
 		} else {
-			expr = new PixelLiteral(ctx.PIXELSIZE().getText());
+			throw new RuntimeException("Unrecognized literal: " + ctx.getText());
 		}
-		currentContainer.peek().addChild(expr);
-	}
-
-	@Override
-	public void enterVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
-		currentContainer.push(new VariableAssignment());
+		currentContainer.peek().addChild(literal);
 	}
 }

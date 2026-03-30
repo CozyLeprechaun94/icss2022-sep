@@ -52,21 +52,21 @@ selector: ID_IDENT
 propertyName: LOWER_IDENT;
 
 // Expression
-expression: COLOR
-    |PIXELSIZE
-    |TRUE
-    |FALSE
-    ;
+expression: literal | variableReference;
 
 // Declaration
 declaration: propertyName COLON expression SEMICOLON;
 
 //--- PARSER: ---
-stylesheet: stylerule*;
+stylesheet: (variableAssignment | stylerule)* EOF;
+variableAssignment: CAPITAL_IDENT ASSIGNMENT_OPERATOR expression SEMICOLON;
+variableReference: CAPITAL_IDENT ;
 stylerule: selector OPEN_BRACE declaration* CLOSE_BRACE;
-variableAssignment: LOWER_IDENT ASSIGNMENT_OPERATOR expression SEMICOLON;
-variableReference: LOWER_IDENT;
+
+// Literals
 literal: COLOR
  |PIXELSIZE
  |TRUE
- |FALSE;
+ |FALSE
+ |PERCENTAGE
+ |SCALAR;
