@@ -51,7 +51,10 @@ public class ASTListener extends ICSSBaseListener {
 
 	@Override
 	public void enterVariableReference(ICSSParser.VariableReferenceContext ctx) {
-		currentContainer.peek().addChild(new VariableReference(ctx.getText()));
+		var reference = new VariableReference(ctx.getText());
+		currentContainer.peek().addChild(reference);
+		currentContainer.push(reference);
+
 	}
 
 //	@Override
@@ -86,9 +89,10 @@ public class ASTListener extends ICSSBaseListener {
 
 	@Override
 	public void enterDeclaration(ICSSParser.DeclarationContext ctx) {
-		Declaration declaration = new  Declaration();
-		currentContainer.push(declaration);
+		Declaration declaration = new Declaration();
+		declaration.property = new PropertyName(ctx.propertyName().getText());
 		currentContainer.peek().addChild(declaration);
+		currentContainer.push(declaration);
 	}
 
 	@Override
