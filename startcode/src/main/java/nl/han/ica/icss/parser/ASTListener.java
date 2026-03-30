@@ -99,4 +99,9 @@ public class ASTListener extends ICSSBaseListener {
 		}
 		currentContainer.peek().addChild(expr);
 	}
+
+	@Override
+	public void enterVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
+		currentContainer.push(new VariableAssignment());
+	}
 }

@@ -54,6 +54,8 @@ propertyName: LOWER_IDENT;
 // Expression
 expression: COLOR
     |PIXELSIZE
+    |TRUE
+    |FALSE
     ;
 
 // Declaration
@@ -62,3 +64,9 @@ declaration: propertyName COLON expression SEMICOLON;
 //--- PARSER: ---
 stylesheet: stylerule*;
 stylerule: selector OPEN_BRACE declaration* CLOSE_BRACE;
+variableAssignment: LOWER_IDENT ASSIGNMENT_OPERATOR expression SEMICOLON;
+variableReference: LOWER_IDENT;
+literal: COLOR
+ |PIXELSIZE
+ |TRUE
+ |FALSE;
