@@ -105,7 +105,7 @@ public class ASTListener extends ICSSBaseListener {
     public void exitElseClause(ICSSParser.ElseClauseContext ctx) {
         currentContainer.pop();
     }
-    
+
     @Override
     public void enterExpression(ICSSParser.ExpressionContext ctx) {
         Expression expression;
