@@ -173,9 +173,9 @@ public class Evaluator implements Transform {
 
         // beide kanten uitrekenen en dan operatie uitvoeren
         if (expression instanceof Operation operation) {
-            Literal leftHandSide = valueExpression(operation.lhs);
-            Literal rightHandSide = valueExpression(operation.rhs);
-            return valueOperation(operation, leftHandSide, rightHandSide);
+            Literal leftHandSide = valueExpression(operation.lhs); //reken linkerkant uit
+            Literal rightHandSide = valueExpression(operation.rhs); //Reken rechterkant uit
+            return valueOperation(operation, leftHandSide, rightHandSide); // Voer de operatie uit op de berekende waarden
         }
 
         return null;
