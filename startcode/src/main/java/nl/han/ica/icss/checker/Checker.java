@@ -77,7 +77,7 @@ public class Checker {
         ExpressionType rightHandSight = getExpressionType(operation.rhs);
 
         if (operation instanceof MultiplyOperation) {
-            if (leftHandSight != ExpressionType.SCALAR || rightHandSight != ExpressionType.SCALAR) {
+            if (leftHandSight != ExpressionType.SCALAR && rightHandSight != ExpressionType.SCALAR) {
                 operation.setError("Only one scalar type can be used!");
 
                 return ExpressionType.UNDEFINED;
