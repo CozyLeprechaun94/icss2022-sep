@@ -23,7 +23,7 @@ public class Evaluator implements Transform {
     @Override
     public void apply(AST ast) {
         variableValues = new HANLinkedList<>();
-        variableValues.addFirst(new  HashMap<>());
+        variableValues.addFirst(new HashMap<>());
 
         for (ASTNode child : ast.root.getChildren()) {
             if (child instanceof VariableAssignment va) {
@@ -36,26 +36,26 @@ public class Evaluator implements Transform {
         variableValues.removeFirst();
     }
 
-    private void applyVariableAssignment(VariableAssignment variableAssignment){
+    private void applyVariableAssignment(VariableAssignment variableAssignment) {
         Literal value = valueExpression(variableAssignment.expression);
         variableValues.getFirst().put(variableAssignment.name.name, value);
     }
 
-    private void applyStylerule(Stylerule stylerule){
-        variableValues.addFirst(new  HashMap<>());
+    private void applyStylerule(Stylerule stylerule) {
+        variableValues.addFirst(new HashMap<>());
         valueBody(stylerule.body);
         variableValues.removeFirst();
     }
 
-    private void applyDeclaration(Declaration declaration){
+    private void applyDeclaration(Declaration declaration) {
         declaration.expression = valueExpression(declaration.expression);
     }
 
-    private void valueBody(List<ASTNode> body){
-        for(ASTNode node : body){
-            if(node instanceof VariableAssignment variableAssignment){
+    private void valueBody(List<ASTNode> body) {
+        for (ASTNode node : body) {
+            if (node instanceof VariableAssignment variableAssignment) {
                 applyVariableAssignment(variableAssignment);
-            } else  if(node instanceof Declaration declaration){
+            } else if (node instanceof Declaration declaration) {
                 applyDeclaration(declaration);
             }
         }
@@ -72,7 +72,41 @@ public class Evaluator implements Transform {
 
 
     private Literal valueOperation(Operation operation, Literal leftHandSight, Literal rightHandSight) {
-        Literal value = null;
+        if (operation instanceof AddOperation) {
+            if (leftHandSight instanceof PixelLiteral left && rightHandSight instanceof PixelLiteral right) {
+                return new PixelLiteral(left.value + right.value);
+            }
+            if (leftHandSight instanceof PercentageLiteral left && rightHandSight instanceof PercentageLiteral right) {
+                return new PercentageLiteral(left.value + right.value);
+            }
+            if (leftHandSight instanceof ScalarLiteral left && rightHandSight instanceof ScalarLiteral right) {
+                return new ScalarLiteral(left.value + right.value);
+            }
+        }
+
+        if (operation instanceof SubtractOperation) {
+            if (leftHandSight instanceof PixelLiteral left && rightHandSight instanceof PixelLiteral right) {
+                return new PixelLiteral(left.value - right.value);
+            }
+            if (leftHandSight instanceof PercentageLiteral left && rightHandSight instanceof PercentageLiteral right) {
+                return new PercentageLiteral(left.value - right.value);
+            }
+            if (leftHandSight instanceof ScalarLiteral left && rightHandSight instanceof ScalarLiteral right) {
+                return new ScalarLiteral(left.value - right.value);
+            }
+        }
+
+        if (operation instanceof MultiplyOperation) {
+            if (leftHandSight instanceof PixelLiteral left && rightHandSight instanceof PixelLiteral right) {
+                return new PixelLiteral(left.value * right.value);
+            }
+            if (leftHandSight instanceof PercentageLiteral left && rightHandSight instanceof PercentageLiteral right) {
+                return new PercentageLiteral(left.value * right.value);
+            }
+            if (leftHandSight instanceof ScalarLiteral left && rightHandSight instanceof ScalarLiteral right) {
+                return new ScalarLiteral(left.value * right.value);
+            }
+        }
         return null;
     }
 
