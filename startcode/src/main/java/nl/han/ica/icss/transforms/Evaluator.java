@@ -10,6 +10,7 @@ import nl.han.ica.icss.ast.operations.SubtractOperation;
 import nl.han.ica.icss.ast.types.ExpressionType;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class Evaluator implements Transform {
 
@@ -41,7 +42,23 @@ public class Evaluator implements Transform {
     }
 
     private void applyStylerule(Stylerule stylerule){
-        // empty
+        variableValues.addFirst(new  HashMap<>());
+        valueBody(stylerule.body);
+        variableValues.removeFirst();
+    }
+
+    private void applyDeclaration(Declaration declaration){
+        declaration.expression = valueExpression(declaration.expression);
+    }
+
+    private void valueBody(List<ASTNode> body){
+        for(ASTNode node : body){
+            if(node instanceof VariableAssignment variableAssignment){
+                applyVariableAssignment(variableAssignment);
+            } else  if(node instanceof Declaration declaration){
+                applyDeclaration(declaration);
+            }
+        }
     }
 
     private Literal lookupVariable(String name) {

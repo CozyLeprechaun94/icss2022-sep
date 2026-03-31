@@ -44,10 +44,10 @@ public class Checker {
 
     private void controlBody(List<ASTNode> body) {
         for (ASTNode node : body) {
-            if (node instanceof VariableAssignment va) {
-                controlVariableAssignment(va);
-            } else if (node instanceof Declaration decl) {
-                controlDeclaration(decl);
+            if (node instanceof VariableAssignment variableAssignment) {
+                controlVariableAssignment(variableAssignment);
+            } else if (node instanceof Declaration declaration) {
+                controlDeclaration(declaration);
             } else if (node instanceof IfClause ifClause) {
                 controlIfClause(ifClause);
             }
