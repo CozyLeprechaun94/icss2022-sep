@@ -70,7 +70,6 @@ public class Evaluator implements Transform {
         return null;
     }
 
-
     private Literal valueOperation(Operation operation, Literal leftHandSight, Literal rightHandSight) {
         if (operation instanceof AddOperation) {
             if (leftHandSight instanceof PixelLiteral left && rightHandSight instanceof PixelLiteral right) {
@@ -97,14 +96,19 @@ public class Evaluator implements Transform {
         }
 
         if (operation instanceof MultiplyOperation) {
-            if (leftHandSight instanceof PixelLiteral left && rightHandSight instanceof PixelLiteral right) {
-                return new PixelLiteral(left.value * right.value);
+            if (leftHandSight instanceof ScalarLiteral left) {
+                if (rightHandSight instanceof PixelLiteral right)
+                    return new PixelLiteral(left.value * right.value);
+                if (rightHandSight instanceof PercentageLiteral right)
+                    return new PercentageLiteral(left.value * right.value);
+                if (rightHandSight instanceof ScalarLiteral right)
+                    return new ScalarLiteral(left.value * right.value);
             }
-            if (leftHandSight instanceof PercentageLiteral left && rightHandSight instanceof PercentageLiteral right) {
-                return new PercentageLiteral(left.value * right.value);
-            }
-            if (leftHandSight instanceof ScalarLiteral left && rightHandSight instanceof ScalarLiteral right) {
-                return new ScalarLiteral(left.value * right.value);
+            if (rightHandSight instanceof ScalarLiteral right) {
+                if (leftHandSight instanceof PixelLiteral left)
+                    return new PixelLiteral(left.value * right.value);
+                if (leftHandSight instanceof PercentageLiteral left)
+                    return new PercentageLiteral(left.value * right.value);
             }
         }
         return null;
@@ -119,7 +123,7 @@ public class Evaluator implements Transform {
 
         if (expression instanceof Operation operation) {
             Literal leftHandSight = valueExpression(operation.lhs);
-            Literal rightHandSight = valueExpression(operation.lhs);
+            Literal rightHandSight = valueExpression(operation.rhs);
             return valueOperation(operation, leftHandSight, rightHandSight);
         }
 
