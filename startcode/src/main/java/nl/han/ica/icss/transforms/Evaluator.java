@@ -22,6 +22,7 @@ public class Evaluator implements Transform {
     @Override
     public void apply(AST ast) {
         variableValues = new HANLinkedList<>();
+        variableValues.addFirst(new  HashMap<>());
 
         for (ASTNode child : ast.root.getChildren()) {
             if (child instanceof VariableAssignment va) {
@@ -43,9 +44,22 @@ public class Evaluator implements Transform {
         // empty
     }
 
+    private Literal lookupVariable(String name) {
+        for (int i = 0; i < variableValues.getSize(); i++) {
+            if (variableValues.get(i).containsKey(name)) {
+                return variableValues.get(i).get(name);
+            }
+        }
+        return null;
+    }
 
     private Literal valueExpression(Expression expression) {
         if (expression instanceof Literal literal) return literal;
+
+        if (expression instanceof VariableReference variableReference) {
+            return lookupVariable(variableReference.name);
+        }
+
 
         return null;
     }
