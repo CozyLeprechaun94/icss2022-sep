@@ -55,15 +55,38 @@ public class Evaluator implements Transform {
         declaration.expression = valueExpression(declaration.expression);
     }
 
+    private void applyIfClause(IfClause ifClause, List<ASTNode> body) {
+        Literal condition = valueExpression(ifClause.conditionalExpression);
+
+        if(condition instanceof BoolLiteral bool) {
+            if (bool.value) {
+                int index = body.indexOf(ifClause);
+                body.remove(ifClause);
+                body.addAll(index, ifClause.body);
+            } else {
+                if (ifClause.elseClause != null) {
+                    int index = body.indexOf(ifClause);
+                    body.remove(ifClause);
+                    body.addAll(index, ifClause.elseClause.body);
+                } else {
+                    body.remove(ifClause);
+                }
+            }
+        }
+    }
+
     private void valueBody(List<ASTNode> body) {
         List<ASTNode> toDelete = new ArrayList<>();
+        List<ASTNode> copy  = new ArrayList<>(body);
 
-        for (ASTNode node : body) {
+        for (ASTNode node : copy) {
             if (node instanceof VariableAssignment variableAssignment) {
                 applyVariableAssignment(variableAssignment);
                 toDelete.add(node);
             } else if (node instanceof Declaration declaration) {
                 applyDeclaration(declaration);
+            } else if (node instanceof IfClause ifClause) {
+                applyIfClause(ifClause, body);
             }
         }
 
