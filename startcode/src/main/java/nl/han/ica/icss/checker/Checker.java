@@ -52,12 +52,27 @@ public class Checker {
         variableTypes.getFirst().put(variableAssignment.name.name, expressionType);
     }
 
+    private ExpressionType lookForVariable(String name, ASTNode node) {
+        for (int i = 0; i < variableTypes.getSize(); i++) {
+            HashMap<String, ExpressionType> scope = variableTypes.get(i);
+            if (scope.containsKey(name)) {
+                return scope.get(name);
+            }
+        }
+        node.setError("Variable " + name + " is not declared!");
+        return ExpressionType.UNDEFINED;
+    }
+
     private ExpressionType getExpressionType(Expression expression) {
         if (expression instanceof BoolLiteral) return ExpressionType.BOOL;
         if (expression instanceof ColorLiteral) return ExpressionType.COLOR;
         if (expression instanceof PixelLiteral) return ExpressionType.PIXEL;
         if (expression instanceof PercentageLiteral) return ExpressionType.PERCENTAGE;
         if (expression instanceof ScalarLiteral) return ExpressionType.SCALAR;
+        
+        if (expression instanceof VariableReference variableReference) {
+            return lookForVariable(variableReference.name, variableReference);
+        }
 
         return ExpressionType.UNDEFINED;
     }
