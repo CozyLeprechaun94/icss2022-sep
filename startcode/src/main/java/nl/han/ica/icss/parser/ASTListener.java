@@ -150,7 +150,7 @@ public class ASTListener extends ICSSBaseListener {
         if (ctx.COLOR() != null) {
             literal = new ColorLiteral(ctx.getText());
         } else if (ctx.PIXELSIZE() != null) {
-            literal = new PixelLiteral(Integer.parseInt(ctx.getText().replace("px", "")));
+            literal = new PixelLiteral(Integer.parseInt(ctx.getText().replace("px", ""))); //Zet om naar integer
         } else if (ctx.TRUE() != null) {
             literal = new BoolLiteral(ctx.getText());
         } else if (ctx.FALSE() != null) {
@@ -158,7 +158,7 @@ public class ASTListener extends ICSSBaseListener {
         } else if (ctx.SCALAR() != null) {
             literal = new ScalarLiteral(Integer.parseInt(ctx.getText()));
         } else if (ctx.PERCENTAGE() != null) {
-            literal = new PercentageLiteral(Integer.parseInt(ctx.getText().replace("%", "")));
+            literal = new PercentageLiteral(Integer.parseInt(ctx.getText().replace("%", ""))); //Zet om naar integer
         } else {
             throw new RuntimeException("Unrecognized literal: " + ctx.getText());
         }
