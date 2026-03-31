@@ -43,7 +43,7 @@ public class Generator {
         if (expression instanceof PixelLiteral pixelLiteral) {
             return pixelLiteral.value + "px"; //Return px bij PixelLiteral
         } else if (expression instanceof PercentageLiteral percentageLiteral){
-            return percentageLiteral.value + "%";
+            return percentageLiteral.value + "%"; //return percentage teken
         } else if (expression instanceof ColorLiteral colorLiteral) {
             return colorLiteral.value; //return value van color ex. #ffffff
         }
