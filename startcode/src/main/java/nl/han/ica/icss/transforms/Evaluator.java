@@ -70,6 +70,12 @@ public class Evaluator implements Transform {
         return null;
     }
 
+
+    private Literal valueOperation(Operation operation, Literal leftHandSight, Literal rightHandSight) {
+        Literal value = null;
+        return null;
+    }
+
     private Literal valueExpression(Expression expression) {
         if (expression instanceof Literal literal) return literal;
 
@@ -77,6 +83,11 @@ public class Evaluator implements Transform {
             return lookupVariable(variableReference.name);
         }
 
+        if (expression instanceof Operation operation) {
+            Literal leftHandSight = valueExpression(operation.lhs);
+            Literal rightHandSight = valueExpression(operation.lhs);
+            return valueOperation(operation, leftHandSight, rightHandSight);
+        }
 
         return null;
     }
