@@ -9,6 +9,7 @@ import nl.han.ica.icss.ast.operations.MultiplyOperation;
 import nl.han.ica.icss.ast.operations.SubtractOperation;
 import nl.han.ica.icss.ast.types.ExpressionType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,16 +25,19 @@ public class Evaluator implements Transform {
     public void apply(AST ast) {
         variableValues = new HANLinkedList<>();
         variableValues.addFirst(new HashMap<>());
+        List<ASTNode> toDelete = new ArrayList<>();
 
         for (ASTNode child : ast.root.getChildren()) {
             if (child instanceof VariableAssignment va) {
                 applyVariableAssignment(va);
+                toDelete.add(va);
             } else if (child instanceof Stylerule rule) {
                 applyStylerule(rule);
             }
         }
 
         variableValues.removeFirst();
+        ast.root.getChildren().removeAll(toDelete);
     }
 
     private void applyVariableAssignment(VariableAssignment variableAssignment) {
@@ -52,13 +56,18 @@ public class Evaluator implements Transform {
     }
 
     private void valueBody(List<ASTNode> body) {
+        List<ASTNode> toDelete = new ArrayList<>();
+
         for (ASTNode node : body) {
             if (node instanceof VariableAssignment variableAssignment) {
                 applyVariableAssignment(variableAssignment);
+                toDelete.add(node);
             } else if (node instanceof Declaration declaration) {
                 applyDeclaration(declaration);
             }
         }
+
+        body.removeAll(toDelete);
     }
 
     private Literal lookupVariable(String name) {
