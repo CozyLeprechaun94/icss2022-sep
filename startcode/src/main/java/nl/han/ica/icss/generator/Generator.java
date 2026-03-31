@@ -19,7 +19,7 @@ public class Generator {
 
     private void createStylerule(Stylerule stylerule, StringBuilder result) {
         result.append(stylerule.selectors.get(0).toString()); // Selector naar string
-        result.append(" {\n"); // Na Selector open curly bracet
+        result.append(" {\n"); // Na Selector open curly bracket
 
         for (ASTNode node : stylerule.body) {
             if (node instanceof Declaration declaration) {
@@ -27,7 +27,7 @@ public class Generator {
             }
         }
 
-        result.append("}\n\n"); //Sluit de stylerule met curly bracet
+        result.append("}\n\n"); //Sluit de stylerule met curly bracket
     }
 
     private void createDeclaration(Declaration declaration, StringBuilder result) {
