@@ -4,6 +4,9 @@ import nl.han.ica.datastructures.HANLinkedList;
 import nl.han.ica.datastructures.IHANLinkedList;
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.literals.*;
+import nl.han.ica.icss.ast.operations.AddOperation;
+import nl.han.ica.icss.ast.operations.MultiplyOperation;
+import nl.han.ica.icss.ast.operations.SubtractOperation;
 import nl.han.ica.icss.ast.types.ExpressionType;
 
 import java.util.HashMap;
@@ -69,6 +72,30 @@ public class Checker {
         return ExpressionType.UNDEFINED;
     }
 
+    private ExpressionType controlOperation(Operation operation) {
+        ExpressionType leftHandSight = getExpressionType(operation.lhs);
+        ExpressionType rightHandSight = getExpressionType(operation.rhs);
+
+        if (operation instanceof MultiplyOperation) {
+            if (leftHandSight != ExpressionType.SCALAR || rightHandSight != ExpressionType.SCALAR) {
+                operation.setError("Only one scalar type can be used!");
+
+                return ExpressionType.UNDEFINED;
+            }
+            return leftHandSight != ExpressionType.SCALAR ? leftHandSight : rightHandSight;
+        }
+
+        if (operation instanceof AddOperation || operation instanceof SubtractOperation) {
+            if (leftHandSight != rightHandSight) {
+                operation.setError("Operations must be of the same literal type!");
+                return ExpressionType.UNDEFINED;
+            }
+            return leftHandSight;
+        }
+
+        return ExpressionType.UNDEFINED;
+    }
+
     private ExpressionType getExpressionType(Expression expression) {
         if (expression instanceof BoolLiteral) return ExpressionType.BOOL;
         if (expression instanceof ColorLiteral) return ExpressionType.COLOR;
@@ -78,6 +105,10 @@ public class Checker {
 
         if (expression instanceof VariableReference variableReference) {
             return lookForVariable(variableReference.name, variableReference);
+        }
+
+        if (expression instanceof Operation operation) {
+            return controlOperation(operation);
         }
 
         return ExpressionType.UNDEFINED;
