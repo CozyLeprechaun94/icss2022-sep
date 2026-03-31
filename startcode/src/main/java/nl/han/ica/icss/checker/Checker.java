@@ -91,29 +91,29 @@ public class Checker {
     }
 
     private ExpressionType controlOperation(Operation operation) {
-        ExpressionType leftHandSight = getExpressionType(operation.lhs);
-        ExpressionType rightHandSight = getExpressionType(operation.rhs);
+        ExpressionType leftHandSide = getExpressionType(operation.lhs);
+        ExpressionType rightHandSide = getExpressionType(operation.rhs);
 
-        if (leftHandSight == ExpressionType.COLOR || rightHandSight == ExpressionType.COLOR) {
+        if (leftHandSide == ExpressionType.COLOR || rightHandSide == ExpressionType.COLOR) {
             operation.setError("Can't use colors with operations!");
             return ExpressionType.COLOR;
         }
 
         if (operation instanceof MultiplyOperation) {
-            if (leftHandSight != ExpressionType.SCALAR && rightHandSight != ExpressionType.SCALAR) {
+            if (leftHandSide != ExpressionType.SCALAR && rightHandSide != ExpressionType.SCALAR) {
                 operation.setError("Only one scalar type can be used!");
 
                 return ExpressionType.UNDEFINED;
             }
-            return leftHandSight != ExpressionType.SCALAR ? leftHandSight : rightHandSight;
+            return leftHandSide != ExpressionType.SCALAR ? leftHandSide : rightHandSide;
         }
 
         if (operation instanceof AddOperation || operation instanceof SubtractOperation) {
-            if (leftHandSight != rightHandSight) {
+            if (leftHandSide != rightHandSide) {
                 operation.setError("Operations must be of the same literal type!");
                 return ExpressionType.UNDEFINED;
             }
-            return leftHandSight;
+            return leftHandSide;
         }
 
         return ExpressionType.UNDEFINED;
