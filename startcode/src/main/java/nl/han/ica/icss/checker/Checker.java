@@ -76,6 +76,11 @@ public class Checker {
         ExpressionType leftHandSight = getExpressionType(operation.lhs);
         ExpressionType rightHandSight = getExpressionType(operation.rhs);
 
+        if (leftHandSight == ExpressionType.COLOR || rightHandSight == ExpressionType.COLOR) {
+            operation.setError("Can't use colors with operations!");
+            return ExpressionType.COLOR;
+        }
+
         if (operation instanceof MultiplyOperation) {
             if (leftHandSight != ExpressionType.SCALAR && rightHandSight != ExpressionType.SCALAR) {
                 operation.setError("Only one scalar type can be used!");
@@ -91,11 +96,6 @@ public class Checker {
                 return ExpressionType.UNDEFINED;
             }
             return leftHandSight;
-        }
-
-        if (leftHandSight == ExpressionType.COLOR || rightHandSight == ExpressionType.COLOR) {
-            operation.setError("Can't use colors in operations!");
-            return ExpressionType.COLOR;
         }
 
         return ExpressionType.UNDEFINED;
