@@ -43,8 +43,14 @@ public class Checker {
         for (ASTNode node : body) {
             if (node instanceof VariableAssignment va) {
                 controlVariableAssignment(va);
+            } else if (node instanceof Declaration decl) {
+                controlDeclaration(decl);
             }
         }
+    }
+
+    private void controlDeclaration(Declaration declaration) {
+        getExpressionType(declaration.expression);
     }
 
     private void controlVariableAssignment(VariableAssignment variableAssignment) {
@@ -69,7 +75,7 @@ public class Checker {
         if (expression instanceof PixelLiteral) return ExpressionType.PIXEL;
         if (expression instanceof PercentageLiteral) return ExpressionType.PERCENTAGE;
         if (expression instanceof ScalarLiteral) return ExpressionType.SCALAR;
-        
+
         if (expression instanceof VariableReference variableReference) {
             return lookForVariable(variableReference.name, variableReference);
         }
