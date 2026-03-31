@@ -93,6 +93,11 @@ public class Checker {
             return leftHandSight;
         }
 
+        if (leftHandSight == ExpressionType.COLOR || rightHandSight == ExpressionType.COLOR) {
+            operation.setError("Can't use colors in operations!");
+            return ExpressionType.COLOR;
+        }
+
         return ExpressionType.UNDEFINED;
     }
 
