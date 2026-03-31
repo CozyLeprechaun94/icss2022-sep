@@ -48,6 +48,8 @@ public class Checker {
                 controlVariableAssignment(va);
             } else if (node instanceof Declaration decl) {
                 controlDeclaration(decl);
+            } else if (node instanceof IfClause ifClause) {
+                controlIfClause(ifClause);
             }
         }
     }
@@ -70,6 +72,22 @@ public class Checker {
         }
         node.setError("Variable " + name + " is not declared!");
         return ExpressionType.UNDEFINED;
+    }
+
+    private void controlIfClause(IfClause ifClause) {
+        if (getExpressionType(ifClause.getConditionalExpression()) != ExpressionType.BOOL) {
+            ifClause.setError("Condition must be of type bool!");
+        }
+
+        variableTypes.addFirst(new HashMap<>());
+        controlBody(ifClause.body);
+        variableTypes.removeFirst();
+
+        if (ifClause.elseClause != null) {
+            variableTypes.addFirst(new HashMap<>());
+            controlBody(ifClause.elseClause.body);
+            variableTypes.removeFirst();
+        }
     }
 
     private ExpressionType controlOperation(Operation operation) {
