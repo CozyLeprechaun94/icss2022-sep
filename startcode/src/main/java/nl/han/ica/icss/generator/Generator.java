@@ -1,10 +1,7 @@
 package nl.han.ica.icss.generator;
 
 
-import nl.han.ica.icss.ast.AST;
-import nl.han.ica.icss.ast.ASTNode;
-import nl.han.ica.icss.ast.Selector;
-import nl.han.ica.icss.ast.Stylerule;
+import nl.han.ica.icss.ast.*;
 
 public class Generator {
 
@@ -19,15 +16,24 @@ public class Generator {
         return result.toString(); //Zet om naar String
     }
 
-    private StringBuilder createStylerule(Stylerule stylerule, StringBuilder result) {
-        result.append(stylerule.selectors.toString());
+    private void createStylerule(Stylerule stylerule, StringBuilder result) {
+        result.append(stylerule.selectors.get(0).toString()); // Selector naar string
+        result.append("{\n"); // Na Selector open curly bracet
+
         for (ASTNode node : stylerule.body) {
-            if(node instanceof Selector selector) {
-                result.append(selector.toString());
+            if(node instanceof Declaration declaration) {
+                createDeclaration(declaration, result);
             }
         }
 
-        result.toString();
-        return result;
+        result.append("}\n\n"); //Sluit de stylerule met curly bracet
+    }
+
+    private void createDeclaration(Declaration declaration, StringBuilder result) {
+        result.append(declaration.property.name) // Iets van background-color
+                .append(": ") //Na het definiëren van de property name background-color:
+                .append(declaration.expression) // Voeg expression toe
+                .append(";\n"); // Sluit de declaration
+
     }
 }
