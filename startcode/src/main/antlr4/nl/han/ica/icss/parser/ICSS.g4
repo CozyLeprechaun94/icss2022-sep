@@ -75,6 +75,6 @@ literal: COLOR
  |PERCENTAGE
  |SCALAR;
 
-ifClause: IF BOX_BRACKET_OPEN variableReference BOX_BRACKET_CLOSE OPEN_BRACE (declaration | ifClause | variableAssignment)* CLOSE_BRACE elseClause?;
+ifClause: IF BOX_BRACKET_OPEN expression BOX_BRACKET_CLOSE OPEN_BRACE (declaration | ifClause | variableAssignment)* CLOSE_BRACE elseClause?;
 
 elseClause: ELSE OPEN_BRACE (declaration | ifClause | variableAssignment)* CLOSE_BRACE;
